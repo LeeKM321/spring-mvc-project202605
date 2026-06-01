@@ -60,6 +60,26 @@ public class PostController {
         return "posts/detail";
     }
 
+    //검색 기능
+    @GetMapping("/search")
+    public String search(@RequestParam(required = false) String keyword,
+                         @RequestParam(required = false) Category category,
+                         @RequestParam(required = false, defaultValue = "latest") String sort,
+                         Model model) {
+
+        List<PostResponse> dtoList = postService.searchPost(keyword, category, sort);
+
+        model.addAttribute("posts", dtoList);
+        model.addAttribute("pageTitle", "🔎 검색 결과");
+
+        // 화면단에 사용자가 선택한 여러가지 조건들을 렌더링 과정에 표시하기 위해 추가 정보를 model에 담아서 내려줍니다.
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("category", category);
+        model.addAttribute("sort", sort);
+
+        return "posts/list";
+    }
+
 
 }
 

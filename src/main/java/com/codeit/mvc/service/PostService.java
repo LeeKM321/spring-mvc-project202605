@@ -1,5 +1,6 @@
 package com.codeit.mvc.service;
 
+import com.codeit.mvc.domain.Category;
 import com.codeit.mvc.domain.Post;
 import com.codeit.mvc.dto.request.PostRequest;
 import com.codeit.mvc.dto.response.PostResponse;
@@ -44,6 +45,36 @@ public class PostService {
     }
 
 
+    public List<PostResponse> searchPost(String keyword, Category category, String sort) {
+
+        // 지금은 DB가 없기 때문에 Java 문법으로 조건부 탐색과 정렬 기준을 직접 작성하고 있지만
+        // 추후에는 DB한테 SQL로 명령을 내릴 겁니다.
+        List<Post> posts;
+
+        if (category != null) {
+            posts = postRepository.findByCategory(category);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            posts = postRepository.findByTitleOrContentContaining(keyword);
+        } else {
+            posts = postRepository.findAll();
+        }
+
+        // 정렬
+        if ("viewCount".equals(sort)) {
+            posts = posts.stream()
+                    .sorted(Comparator.comparing(Post::getViewCount).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            posts = posts.stream()
+                    .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                    .collect(Collectors.toList());
+        }
+
+        return posts.stream()
+                .map(PostResponse::from)
+                .collect(Collectors.toList());
+
+    }
 }
 
 

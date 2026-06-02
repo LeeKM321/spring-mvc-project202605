@@ -51,7 +51,7 @@ public class PostController {
         // 파일 업로드 처리
         if (file != null && !file.isEmpty()) {
             String fileName = fileService.saveFile(file);
-            postRequest.setThumbnailPath(fileName);
+            postRequest = postRequest.withThumbnailPath(fileName);
         }
 
 
@@ -67,7 +67,7 @@ public class PostController {
         PostResponse resDto = postService.getPostById(id);
 
         model.addAttribute("post", resDto);
-        model.addAttribute("pageTitle", resDto.getTitle());
+        model.addAttribute("pageTitle", resDto.title());
         model.addAttribute("comments", new ArrayList<>());
 
         return "posts/detail";

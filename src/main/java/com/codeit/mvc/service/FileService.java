@@ -7,11 +7,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -85,6 +85,9 @@ public class FileService {
         }
 
         try {
+
+            byte[] bytes = FileCopyUtils.copyToByteArray(Files.newInputStream(requested));
+
             Resource resource = new UrlResource(requested.toUri());
             // 파일의 Content-type이 무엇인지를 정확하게 알려줘야 img 태그가 제대로 화면에 렌더링을 할 수 있음.
             // "image/jpg", "text/html", "image/png", "application/json"

@@ -28,11 +28,11 @@ public class PostService {
 
     public Post createPost(PostRequest postRequest) {
         Post post = Post.builder()
-                .author(postRequest.getAuthor())
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .category(postRequest.getCategory())
-                .thumbnailPath(postRequest.getThumbnailPath())
+                .author(postRequest.author())
+                .title(postRequest.title())
+                .content(postRequest.content())
+                .category(postRequest.category())
+                .thumbnailPath(postRequest.thumbnailPath())
                 .build();
 
         return postRepository.save(post);

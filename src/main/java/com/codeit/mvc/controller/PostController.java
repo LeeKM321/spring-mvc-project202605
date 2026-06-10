@@ -3,7 +3,9 @@ package com.codeit.mvc.controller;
 import com.codeit.mvc.domain.Category;
 import com.codeit.mvc.domain.Post;
 import com.codeit.mvc.dto.request.PostRequest;
+import com.codeit.mvc.dto.response.CommentResponse;
 import com.codeit.mvc.dto.response.PostResponse;
+import com.codeit.mvc.service.CommentService;
 import com.codeit.mvc.service.FileService;
 import com.codeit.mvc.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class PostController {
 
     private final PostService postService;
     private final FileService fileService;
+    private final CommentService commentService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(Model model) {
@@ -65,10 +68,11 @@ public class PostController {
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         PostResponse resDto = postService.getPostById(id);
+        List<CommentResponse> dtoList = commentService.getCommentsByPostId(id);
 
         model.addAttribute("post", resDto);
         model.addAttribute("pageTitle", resDto.title());
-        model.addAttribute("comments", new ArrayList<>());
+        model.addAttribute("comments", dtoList);
 
         return "posts/detail";
     }
@@ -92,6 +96,25 @@ public class PostController {
 
         return "posts/list";
     }
+
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///
+    /// @return
+
+    // 댓글 관련 엔드포인트
+
+    // 댓글 작성
+    @PostMapping("/{id}/comments")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam String author,
+                             @RequestParam String content) {
+        log.info("POST /posts/{}/comments - author: {}", id, author);
+        CommentResponse resDto = commentService.createComment(id, author, content);
+
+        return "redirect:/posts/" + id;
+    }
+
+    // 댓글 삭제
 
 
 }

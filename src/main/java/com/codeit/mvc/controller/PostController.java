@@ -10,6 +10,7 @@ import com.codeit.mvc.service.FileService;
 import com.codeit.mvc.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -121,6 +122,15 @@ public class PostController {
         return "redirect:/posts/" + postId;
     }
 
+    // 컨트롤러에서 ExceptionHandler를 등록할 수도 있습니다만,
+    // 웬만하면 전역 예외 처리 역할을 담당하는 클래스(@ControllerAdvice)를 선언해서 처리하는 것을 더 선호합니다.
+    // @ControllerAdvice에 선언된 핸들러와 컨트롤러에 선언된 핸들러의 처리 예외 타입이 같다면 컨트롤러 쪽의 핸들러가 우선시됩니다.
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleException(IllegalStateException e, Model model) {
+        model.addAttribute("message", e.getMessage());
+        return "error/400";
+    }
 
 }
 

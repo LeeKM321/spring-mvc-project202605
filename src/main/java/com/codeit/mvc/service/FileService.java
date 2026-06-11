@@ -1,5 +1,6 @@
 package com.codeit.mvc.service;
 
+import com.codeit.mvc.exception.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -40,7 +41,7 @@ public class FileService {
             Files.createDirectories(uploadPath);
             log.info("업로드 디렉토리 준비 완료: {}", uploadPath);
         } catch (IOException e) {
-            throw new RuntimeException("업로드 디렉토리 생성 실패: " + uploadPath, e);
+            throw new FileStorageException("업로드 디렉토리 생성 실패: " + uploadPath, e);
         }
     }
 
@@ -72,7 +73,7 @@ public class FileService {
 
             return savedFileName; // 파일 저장이 완료되면 새로운 파일명을 리턴 -> DB 저장
         } catch (IOException e) {
-            throw new RuntimeException("파일 저장 실패: " + originFileName, e);
+            throw new FileStorageException("파일 저장 실패: " + originFileName, e);
         }
 
     }

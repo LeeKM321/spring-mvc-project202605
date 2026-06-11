@@ -44,6 +44,13 @@ public class CommentService {
                 .map(CommentResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public void deleteComment(Long id) {
+        commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다. id= " + id));
+
+        commentRepository.deleteById(id);
+    }
 }
 
 

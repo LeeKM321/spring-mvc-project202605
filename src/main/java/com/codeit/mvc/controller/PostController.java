@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller // 컨트롤러가 요청에 맞는 뷰 페이지를 결정하게 하겠다. (Server Side Rendering)
@@ -115,6 +114,12 @@ public class PostController {
     }
 
     // 댓글 삭제
+    @PostMapping("{postId}/comments/{id}/delete")
+    public String deleteComment(@PathVariable Long postId, @PathVariable Long id) {
+        commentService.deleteComment(id);
+
+        return "redirect:/posts/" + postId;
+    }
 
 
 }
